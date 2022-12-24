@@ -14,7 +14,13 @@ app = FastAPI(title="English Teacher",
               version="1.0")  # create API service
 helper = Helper()  # database, questions
 
+@app.get("/auth")
+def auth():
+    return helper.authorization()
 
+@app.get("/clear")
+def clear():
+    return helper.clear_score()0
 #   =================== WORD ======================
 
 

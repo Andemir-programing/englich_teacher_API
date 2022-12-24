@@ -7,6 +7,7 @@ class Helper:
     def __init__(self):
         self.question_id = 1000
         self.db = {}
+        self.score = 0
 
         with open("db_ru_en.txt", encoding='utf-8') as f:
             data = f.readlines()
@@ -16,7 +17,13 @@ class Helper:
             ru, en = line.split("-")
             self.dictionary[en.strip()] = ru.strip()
 
+    def authorization(self):
+        self.nickname = input('enter you nickname')
+
+    def clear_score(self):
+        self.score = 0
     #   =================== GENERATE ======================
+
 
     def generate_question_word(self):
         rus = list(self.dictionary.values())
@@ -53,6 +60,9 @@ class Helper:
     def check_answer(self, question_id, answer):
         if question_id in self.db:
             correct_answer = self.db[question_id]
+            if correct_answer == answer:
+                self.score += 1
+                self.db[self.nickname] = self.score
             return JSONResponse(content={"is_correct": correct_answer == answer},
                                 media_type="application/json")
         else:
