@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>English Teacher</title>
+    <meta charset="utf-8"/>
+</head>
+
+<style>
+button{
+  align-items: center;
+  appearance: none;
+  background-color: #FC0505;
+  background-image: linear-gradient(1deg, #4F58FD, #149BF3 99%);
+  background-size: calc(100% + 20px) calc(100% + 20px);
+  border-radius: 100px;
+  border-width: 0;
+  box-shadow: none;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: CircularStd,sans-serif;
+  font-size: 1rem;
+  height: auto;
+  justify-content: center;
+  line-height: 1.5;
+  padding: 6px 20px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color .2s,background-position .2s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: top;
+  white-space: nowrap;
+}
+th{
+padding:20px
+}
+h1{
+align-items: center;
+text-align: center;
+}
+
+input{
+align-items: center;
+text-align: center;
+}
+
+</style>
+
+<body>
+
+<input id="user_email">
+<button onclick="authorization()"> Login </button>
+
+<script>
+async function authorization() {
+        const user_email = document.getElementById("user_email").value;
+        console.log(user_email)
+
+        const response = await fetch("auth/login/${user_email}", {
+        method: "GET",
+        headers: { "Accept": "application/json"}
+        })
+
+        window.location.href = '/play'   <!--redirect to page /play-->
+
+}
+</script>
+
+</body>
+
+</html>

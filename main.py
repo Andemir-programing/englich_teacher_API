@@ -1,9 +1,9 @@
 from fastapi import FastAPI, Path
 import uvicorn
-from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
+from fastapi.responses import HTMLResponse, JSONResponse, FileResponse, RedirectResponse
 
 from helper import Helper
-from models import AnswerRequestBody, LetterRequestBody
+from models import AnswerRequestBody, LetterRequestBody, UserLoginBody
 
 # Endpoints:
 # word/guess,   word/check,    word/result
@@ -14,13 +14,7 @@ app = FastAPI(title="English Teacher",
               version="1.0")  # create API service
 helper = Helper()  # database, questions
 
-@app.get("/auth")
-def auth():
-    return helper.authorization()
 
-@app.get("/clear")
-def clear():
-    return helper.clear_score()0
 #   =================== WORD ======================
 
 
@@ -55,13 +49,25 @@ def guess_letter_result(question_id: int = Path(1000, gt=0, description="questio
 def guess_letter_check(user_answer: LetterRequestBody):
     return helper.check_answer(user_answer.question_id, user_answer.letter)
 
+#   =================== AUTH ======================
+
+
+@app.get("/auth/login/{email}", tags=['auth'])
+def login(email):
+    return helper.login(email)
+
 
 #   =================== RUN ======================
 
 @app.get("/")
 def root():
+    return FileResponse("public/auth.html")
+
+
+@app.get("/play")
+def root():
     return FileResponse("public/index.html")
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)

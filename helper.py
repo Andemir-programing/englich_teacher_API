@@ -1,13 +1,13 @@
 import random
 import numpy as np
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse, RedirectResponse
 
 
 class Helper:
     def __init__(self):
         self.question_id = 1000
         self.db = {}
-        self.score = 0
+        self.db_score = {}
 
         with open("db_ru_en.txt", encoding='utf-8') as f:
             data = f.readlines()
@@ -17,13 +17,13 @@ class Helper:
             ru, en = line.split("-")
             self.dictionary[en.strip()] = ru.strip()
 
-    def authorization(self):
-        self.nickname = input('enter you nickname')
-
-    def clear_score(self):
-        self.score = 0
     #   =================== GENERATE ======================
 
+    def login(self, email):
+        self.db_score[email] = 0
+        return JSONResponse(status_code=200)
+
+    #   =================== GENERATE ======================
 
     def generate_question_word(self):
         rus = list(self.dictionary.values())
@@ -35,7 +35,6 @@ class Helper:
 
         question_id = self.get_question_id()
         self.db[question_id] = ru_word
-        # print({"question_id": question_id, "variance": var, "english": en_word})
 
         return JSONResponse(content={"question_id": question_id, "variance": var, "english": en_word},
                             media_type="application/json")
@@ -60,9 +59,6 @@ class Helper:
     def check_answer(self, question_id, answer):
         if question_id in self.db:
             correct_answer = self.db[question_id]
-            if correct_answer == answer:
-                self.score += 1
-                self.db[self.nickname] = self.score
             return JSONResponse(content={"is_correct": correct_answer == answer},
                                 media_type="application/json")
         else:
@@ -76,7 +72,7 @@ class Helper:
             return JSONResponse(content={"correct_answer": correct_answer},
                                 media_type="application/json")
         else:
-            return JSONResponse(status_code=400, content={"error": "entered question_id not existing"})
+            return JSONResponse(status_code=404, content={"error": "entered question_id not existing"})
 
     def get_question_id(self):
         self.question_id += 1
