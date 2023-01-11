@@ -9,3 +9,7 @@ class AnswerRequestBody(BaseModel):
 class LetterRequestBody(BaseModel):
     question_id: int = Field(gt=0, description="question id from response")
     letter: str = Field(max_length=1, description="value for skipped letter")
+
+
+class UserLoginBody(BaseModel):
+    email: str = Field(min_length=1, max_length=128)

@@ -21,7 +21,7 @@ class Helper:
 
     def login(self, email):
         self.db_score[email] = 0
-        return JSONResponse(status_code=200)
+        return JSONResponse(status_code=200,content={})
 
     #   =================== GENERATE ======================
 
